@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Buku Interaktif: Pengenalan Aljabar Kelas 7</title>
+<style>
+:root{
+  --bg:#2b3a55; --paper:#fffaf0; --ink:#2d2a26; --accent:#e8590c; --blue:#1c7ed6; --green:#2f9e44; --purple:#9c36b5; --soft:#fff3bf;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Segoe UI",system-ui,sans-serif;background:radial-gradient(circle at 30% 20%,#3d5280,#1d2740);color:var(--ink);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px;overflow-x:hidden}
+.title-bar{color:#ffe8a3;font-weight:700;letter-spacing:.5px;margin-bottom:10px;text-align:center;font-size:1rem}
+.book{position:relative;width:min(94vw,640px);height:min(78vh,620px);perspective:1800px}
+.book::before{content:"";position:absolute;inset:-8px -10px -10px -10px;background:#7a4a21;border-radius:10px 16px 16px 10px;box-shadow:0 20px 40px rgba(0,0,0,.5)}
+.page{position:absolute;inset:0;background:var(--paper);border-radius:6px 14px 14px 6px;transform-origin:left center;transition:transform .9s cubic-bezier(.6,.05,.25,1),opacity .3s .6s;backface-visibility:hidden;overflow:hidden;display:flex;flex-direction:column;box-shadow:inset 18px 0 24px -16px rgba(0,0,0,.35)}
+.page.flipped{transform:rotateY(-110deg);opacity:0;pointer-events:none}
+.page .inner{flex:1;overflow-y:auto;padding:22px 24px 14px 34px}
+.page h2{color:var(--accent);font-size:1.45rem;margin-bottom:10px}
+.page p{line-height:1.55;margin-bottom:10px;font-size:1rem}
+.num{position:absolute;bottom:6px;right:16px;font-size:.8rem;color:#999}
+.box{background:var(--soft);border-left:5px solid #fab005;border-radius:8px;padding:10px 12px;margin:10px 0}
+.card{background:#fff;border:2px dashed #ced4da;border-radius:12px;padding:12px;margin:10px 0;text-align:center}
+.big{font-size:2.2rem;font-weight:800}
+button,.btn{font:inherit;cursor:pointer;border:none;border-radius:10px;padding:8px 14px;background:var(--blue);color:#fff;font-weight:600;transition:transform .1s,filter .2s}
+button:hover{filter:brightness(1.1)} button:active{transform:scale(.96)}
+button.alt{background:var(--green)} button.ghost{background:#e9ecef;color:#333}
+input[type=number]{font:inherit;width:90px;padding:6px 8px;border:2px solid #adb5bd;border-radius:8px;text-align:center;font-size:1.2rem}
+input[type=range]{width:100%;accent-color:var(--accent);margin:8px 0}
+.chip{display:inline-block;padding:8px 14px;margin:4px;border-radius:12px;font-size:1.9rem;font-weight:800;cursor:pointer;border:3px solid transparent;transition:transform .15s}
+.chip:hover{transform:translateY(-3px)}
+.chip.k{background:#ffe3e3;color:#c92a2a}.chip.v{background:#d0ebff;color:#1864ab}.chip.c{background:#d3f9d8;color:#2b8a3e}
+.opt{display:inline-block;margin:4px;padding:10px 16px;border-radius:10px;background:#e7f5ff;border:2px solid #a5d8ff;cursor:pointer;font-weight:700;font-size:1.1rem;user-select:none}
+.opt.sel{background:#ffd8a8;border-color:var(--accent)}.opt.ok{background:#b2f2bb;border-color:var(--green)}.opt.bad{background:#ffc9c9;border-color:#e03131}
+.fb{min-height:1.4em;font-weight:700;margin-top:6px}
+.good{color:var(--green)}.wrong{color:#e03131}
+.emoji{font-size:1.7rem;letter-spacing:2px;word-break:break-all}
+.nav{display:flex;align-items:center;justify-content:space-between;width:min(94vw,640px);margin-top:18px;gap:10px}
+.nav button{background:#ffd43b;color:#3b2f00;font-size:1rem;min-width:100px}
+.nav button:disabled{opacity:.35;cursor:not-allowed}
+.dots{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.dot{width:11px;height:11px;border-radius:50%;background:#7b8bb0;cursor:pointer;transition:all .3s}
+.dot.on{background:#ffd43b;transform:scale(1.35)}
+.cover{background:linear-gradient(135deg,#ff922b,#e8590c);color:#fff;text-align:center;align-items:center;justify-content:center}
+.cover .inner{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px}
+.cover h1{font-size:2.2rem;line-height:1.2;margin:10px 0}
+.cover .sym{font-size:3.2rem;font-weight:800;letter-spacing:6px;background:rgba(255,255,255,.18);padding:10px 22px;border-radius:18px;margin:12px 0}
+.cover button{background:#fff;color:var(--accent);font-size:1.1rem;margin-top:16px}
+.mini{font-size:.9rem;color:#555}
+@media(max-width:480px){.book{height:76vh}.page h2{font-size:1.25rem}.big{font-size:1.8rem}.chip{font-size:1.5rem}}
+</style>
+</head>
+<body>
+<div class="title-bar">📘 Buku Interaktif Matematika Kelas 7 · Pengenalan Aljabar</div>
+
+<div class="book" id="book">
+
+<!-- 0 COVER -->
+<section class="page cover">
+  <div class="inner">
+    <div>MATEMATIKA · KELAS 7</div>
+    <h1>Pengenalan<br>ALJABAR</h1>
+    <div class="sym">x + 2 = 5</div>
+    <p>Membuka dunia huruf dan angka yang bekerja sama</p>
+    <button onclick="go(1)">📖 Buka Buku</button>
+    <p class="mini" style="color:#ffe8cc;margin-top:14px">Tips: geser layar atau gunakan tombol panah ← →</p>
+  </div>
+</section>
+
+<!-- 1 APA ITU ALJABAR -->
+<section class="page"><div class="inner">
+  <h2>1. Apa itu Aljabar?</h2>
+  <p>Aljabar adalah cara menulis soal matematika dengan <b>huruf</b> untuk mewakili bilangan yang <b>belum diketahui</b>.</p>
+  <div class="box">🎁 Kotak misteri: ada kotak berisi sejumlah kelereng. Ditambah 3 kelereng, totalnya jadi 8.</div>
+  <div class="card">
+    <div class="big">▢ + 3 = 8</div>
+    <p style="margin-top:8px">Berapa isi kotak itu?</p>
+    <input type="number" id="mb" placeholder="?"> <button onclick="cekKotak()">Cek</button>
+    <div class="fb" id="mbfb"></div>
+  </div>
+  <p>Kotak ▢ itu kita ganti dengan huruf, misalnya <b>x</b>. Maka kalimatnya menjadi <b>x + 3 = 8</b>.</p>
+</div><div class="num">1</div></section>
+
+<!-- 2 VARIABEL -->
+<section class="page"><div class="inner">
+  <h2>2. Variabel</h2>
+  <p><b>Variabel</b> adalah huruf yang mewakili bilangan yang nilainya bisa berubah-ubah, misalnya x, y, atau n.</p>
+  <div class="box">✏️ Harga 1 pensil = <b>x</b> rupiah. Geser untuk mengubah harganya!</div>
+  <div class="card">
+    <div>Harga 1 pensil: <b>x = Rp <span id="px">2000</span></b></div>
+    <input type="range" id="pr" min="1000" max="5000" step="500" value="2000" oninput="hitungPensil()">
+    <div class="emoji">✏️✏️✏️</div>
+    <div style="margin-top:6px">Harga 3 pensil = 3 × x = <b>3x</b> = <span class="big" style="color:var(--green)">Rp <span id="p3">6000</span></span></div>
+  </div>
+  <p>Satu rumus <b>3x</b> bisa dipakai untuk berbagai harga. Itulah kekuatan variabel!</p>
+</div><div class="num">2</div></section>
+
+<!-- 3 ANATOMI -->
+<section class="page"><div class="inner">
+  <h2>3. Koefisien, Variabel, Konstanta</h2>
+  <p>Perhatikan bentuk aljabar berikut. <b>Ketuk</b> tiap bagian untuk mengetahui namanya.</p>
+  <div class="card">
+    <span class="chip k" onclick="anat('k')">3</span><span class="chip v" onclick="anat('v')">x</span><span class="chip" style="cursor:default">+</span><span class="chip c" onclick="anat('c')">5</span>
+    <div class="fb" id="anfb" style="min-height:3.2em">👆 Ketuk salah satu bagian</div>
+  </div>
+  <div class="box">
+    <b>Koefisien</b>: angka di depan variabel.<br>
+    <b>Variabel</b>: huruf pengganti bilangan.<br>
+    <b>Konstanta</b>: angka tanpa variabel.
+  </div>
+  <p class="mini">Catatan: <b>3x</b> dan <b>5</b> disebut <b>suku</b>, dan tiap suku dipisahkan oleh tanda + atau −.</p>
+</div><div class="num">3</div></section>
+
+<!-- 4 SUKU SEJENIS -->
+<section class="page"><div class="inner">
+  <h2>4. Suku Sejenis</h2>
+  <p>Suku sejenis punya <b>variabel yang sama</b> (huruf dan pangkatnya sama). Koefisiennya boleh beda.</p>
+  <div class="box">Pilih <b>semua</b> suku yang sejenis dengan <b>2x</b>:</div>
+  <div class="card" id="sj">
+    <span class="opt" data-ok="1">5x</span><span class="opt" data-ok="0">3y</span><span class="opt" data-ok="0">7</span><span class="opt" data-ok="1">−x</span><span class="opt" data-ok="0">x²</span><span class="opt" data-ok="1">x</span>
+    <br><button onclick="cekSejenis()" style="margin-top:8px">Periksa jawaban</button>
+    <div class="fb" id="sjfb"></div>
+  </div>
+  <p class="mini">Ingat: x dan x² <b>tidak</b> sejenis karena pangkatnya berbeda.</p>
+</div><div class="num">4</div></section>
+
+<!-- 5 MENYEDERHANAKAN -->
+<section class="page"><div class="inner">
+  <h2>5. Menjumlahkan Suku Sejenis</h2>
+  <p>Suku sejenis bisa dijumlahkan dengan menjumlahkan koefisiennya, seperti menghitung apel yang sama.</p>
+  <div class="card">
+    <div>Keranjang A: <b><span id="aa">3</span></b> apel &nbsp;
+      <button class="ghost" onclick="ubah('a',-1)">−</button><button class="ghost" onclick="ubah('a',1)">+</button></div>
+    <div class="emoji" id="ea"></div>
+    <div style="margin-top:8px">Keranjang B: <b><span id="bb">2</span></b> apel &nbsp;
+      <button class="ghost" onclick="ubah('b',-1)">−</button><button class="ghost" onclick="ubah('b',1)">+</button></div>
+    <div class="emoji" id="eb"></div>
+    <div class="big" style="margin-top:10px;color:var(--accent)" id="rumus">3x + 2x = 5x</div>
+    <div class="mini">(anggap x = 1 apel)</div>
+  </div>
+  <div class="box">Apel + jeruk <b>tidak</b> bisa digabung: <b>3x + 2y</b> tetap ditulis 3x + 2y.</div>
+</div><div class="num">5</div></section>
+
+<!-- 6 SUBSTITUSI -->
+<section class="page"><div class="inner">
+  <h2>6. Substitusi (Mengganti Nilai)</h2>
+  <p>Substitusi artinya <b>mengganti variabel dengan angka</b>, lalu menghitung hasilnya.</p>
+  <div class="box">Hitung nilai <b>2x + 3</b> untuk beberapa nilai x. Geser slidernya!</div>
+  <div class="card">
+    <div>x = <span class="big" style="color:var(--blue)" id="sx">4</span></div>
+    <input type="range" id="sl" min="0" max="10" value="4" oninput="subs()">
+    <div class="big" id="sres">2(4) + 3 = 11</div>
+  </div>
+  <p>Perhatikan: setiap x bertambah 1, hasilnya bertambah <b>2</b>. Angka 2 itu adalah koefisien x!</p>
+</div><div class="num">6</div></section>
+
+<!-- 7 KUIS -->
+<section class="page"><div class="inner">
+  <h2>7. Uji Pemahamanmu 🎯</h2>
+  <div id="quiz"></div>
+</div><div class="num">7</div></section>
+
+<!-- 8 RANGKUMAN -->
+<section class="page"><div class="inner">
+  <h2>8. Rangkuman</h2>
+  <div class="box">
+    ✅ <b>Variabel</b>: huruf pengganti bilangan (x, y, n).<br>
+    ✅ <b>Koefisien</b>: angka di depan variabel.<br>
+    ✅ <b>Konstanta</b>: angka tanpa variabel.<br>
+    ✅ <b>Suku sejenis</b>: variabel dan pangkatnya sama.<br>
+    ✅ <b>Substitusi</b>: mengganti variabel dengan angka.
+  </div>
+  <div class="card"><b>Contoh:</b> 4x + 3x − 2 + 5<br><span class="big" style="color:var(--green)">= 7x + 3</span></div>
+  <p style="text-align:center"><b>Hebat! Kamu sudah mengenal dasar aljabar 🎉</b></p>
+  <div style="text-align:center"><button onclick="go(0)">↺ Baca dari awal</button></div>
+</div><div class="num">8</div></section>
+</div>
+
+<div class="nav">
+  <button id="prev" onclick="step(-1)">← Sebelumnya</button>
+  <div class="dots" id="dots"></div>
+  <button id="next" onclick="step(1)">Lanjut →</button>
+</div>
+
+<script>
+const pages=[...document.querySelectorAll('.page')];
+let cur=0;
+const dots=document.getElementById('dots');
+pages.forEach((_,i)=>{const d=document.createElement('div');d.className='dot';d.onclick=()=>go(i);dots.appendChild(d)});
+function render(){
+  pages.forEach((p,i)=>{p.classList.toggle('flipped',i<cur);p.style.zIndex=i<cur?i:100-i});
+  [...dots.children].forEach((d,i)=>d.classList.toggle('on',i===cur));
+  document.getElementById('prev').disabled=cur===0;
+  document.getElementById('next').disabled=cur===pages.length-1;
+}
+function go(i){cur=Math.max(0,Math.min(pages.length-1,i));render()}
+function step(n){go(cur+n)}
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight')step(1);if(e.key==='ArrowLeft')step(-1)});
+let sx0=null;
+document.getElementById('book').addEventListener('touchstart',e=>{sx0=e.touches[0].clientX},{passive:true});
+document.getElementById('book').addEventListener('touchend',e=>{
+  if(sx0===null)return;const dx=e.changedTouches[0].clientX-sx0;
+  if(Math.abs(dx)>70)step(dx<0?1:-1);sx0=null});
+
+/* Hal 1 */
+function cekKotak(){
+  const v=document.getElementById('mb').value,f=document.getElementById('mbfb');
+  if(v==='')return f.textContent='Isi dulu jawabanmu ya.';
+  if(+v===5){f.className='fb good';f.textContent='✅ Benar! x = 5, karena 5 + 3 = 8'}
+  else{f.className='fb wrong';f.textContent='❌ Belum tepat. Coba pikir: berapa ditambah 3 hasilnya 8?'}
+}
+/* Hal 2 */
+function hitungPensil(){
+  const x=+document.getElementById('pr').value;
+  document.getElementById('px').textContent=x;
+  document.getElementById('p3').textContent=3*x;
+}
+/* Hal 3 */
+function anat(t){
+  const m={k:'<span style="color:#c92a2a">3 = KOEFISIEN</span><br>Angka yang mengalikan variabel (3 × x).',
+           v:'<span style="color:#1864ab">x = VARIABEL</span><br>Huruf yang nilainya belum diketahui.',
+           c:'<span style="color:#2b8a3e">5 = KONSTANTA</span><br>Angka tetap, tidak ada variabelnya.'};
+  document.getElementById('anfb').innerHTML=m[t];
+}
+/* Hal 4 */
+document.querySelectorAll('#sj .opt').forEach(o=>o.onclick=()=>o.classList.toggle('sel'));
+function cekSejenis(){
+  let ok=true;
+  document.querySelectorAll('#sj .opt').forEach(o=>{
+    const sel=o.classList.contains('sel'),want=o.dataset.ok==='1';
+    o.classList.remove('ok','bad');
+    if(want&&sel)o.classList.add('ok');
+    if(sel!==want){ok=false;if(sel)o.classList.add('bad')}
+  });
+  const f=document.getElementById('sjfb');
+  f.className='fb '+(ok?'good':'wrong');
+  f.textContent=ok?'✅ Tepat! 5x, −x, dan x sejenis dengan 2x.':'❌ Masih ada yang kurang tepat. Cek lagi variabel dan pangkatnya.';
+}
+/* Hal 5 */
+const apel={a:3,b:2};
+function ubah(k,d){apel[k]=Math.max(0,Math.min(6,apel[k]+d));drawApel()}
+function drawApel(){
+  document.getElementById('aa').textContent=apel.a;
+  document.getElementById('bb').textContent=apel.b;
+  document.getElementById('ea').textContent='🍎'.repeat(apel.a)||'(kosong)';
+  document.getElementById('eb').textContent='🍎'.repeat(apel.b)||'(kosong)';
+  document.getElementById('rumus').textContent=`${apel.a}x + ${apel.b}x = ${apel.a+apel.b}x`;
+}
+/* Hal 6 */
+function subs(){
+  const x=+document.getElementById('sl').value;
+  document.getElementById('sx').textContent=x;
+  document.getElementById('sres').textContent=`2(${x}) + 3 = ${2*x+3}`;
+}
+/* Hal 7 Kuis */
+const soal=[
+  {q:'Pada bentuk 4y + 7, apa koefisiennya?',o:['4','y','7','11'],a:0},
+  {q:'Manakah yang merupakan konstanta pada 5a − 9 + 2b?',o:['5a','−9','2b','b'],a:1},
+  {q:'Hasil dari 6x + 3x adalah ...',o:['9x','9x²','18x','63x'],a:0},
+  {q:'Nilai 3x − 2 jika x = 5 adalah ...',o:['11','13','15','17'],a:1},
+  {q:'Pasangan suku sejenis adalah ...',o:['2a dan 2b','4x dan x²','7p dan −3p','5 dan 5m'],a:2}
+];
+let qi=0,skor=0;
+function tampilSoal(){
+  const box=document.getElementById('quiz');
+  if(qi>=soal.length){
+    const pesan=skor===5?'Sempurna! 🌟':skor>=3?'Bagus, terus berlatih! 👍':'Ayo ulangi halaman sebelumnya 💪';
+    box.innerHTML=`<div class="card"><div class="big">${skor} / ${soal.length}</div><p>${pesan}</p><button class="alt" onclick="qi=0;skor=0;tampilSoal()">Ulangi Kuis</button></div>`;
+    return;
+  }
+  const s=soal[qi];
+  box.innerHTML=`<p class="mini">Soal ${qi+1} dari ${soal.length}</p><p><b>${s.q}</b></p><div>`+
+    s.o.map((t,i)=>`<span class="opt" onclick="jawab(${i},this)">${t}</span>`).join('')+`</div><div class="fb" id="qfb"></div>`;
+}
+function jawab(i,el){
+  if(document.querySelector('#quiz .opt.ok,#quiz .opt.bad'))return;
+  const s=soal[qi],opts=[...document.querySelectorAll('#quiz .opt')];
+  const f=document.getElementById('qfb');
+  if(i===s.a){skor++;el.classList.add('ok');f.className='fb good';f.textContent='✅ Benar!'}
+  else{el.classList.add('bad');opts[s.a].classList.add('ok');f.className='fb wrong';f.textContent='❌ Kurang tepat. Jawaban benar ditandai hijau.'}
+  f.insertAdjacentHTML('afterend','<button style="margin-top:10px" onclick="qi++;tampilSoal()">Lanjut ➜</button>');
+}
+drawApel();tampilSoal();render();
+</script>
+</body>
+</html>
